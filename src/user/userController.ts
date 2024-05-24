@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import userModel from "./userModel";
 import bcrypt from 'bcrypt';
+import { sign } from "jsonwebtoken";
+import { config } from "../config/config";
 
 const createUser = async(req: Request,res:Response,next:NextFunction) => {
     console.log("reqdata",req.body)
@@ -22,10 +24,16 @@ const createUser = async(req: Request,res:Response,next:NextFunction) => {
 
     // password hashing.
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Adding user to database.
+
+    const newUser = await userModel.create({name,email,password: hashedPassword})
+
     
-
-    res.json({message:"User Created."})
-
+    // Token Generation (JWT)
+    const token = sign({sub: newUser._id},config.jwtSecret as string,{expiresIn:"7d", algorithm:"HS256"});
+    
+    res.json({accessToken : token})
 }
 
 export { createUser };
