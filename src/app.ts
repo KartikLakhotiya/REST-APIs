@@ -4,6 +4,8 @@ import { config } from './config/config';
 import userRouter from './user/userRouter';
 const app = express();
 
+app.use(express.json())
+
 // Routes
 
 app.get('/', (req, res) => {
