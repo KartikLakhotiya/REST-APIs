@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
+import userModel from "./userModel";
 
 const createUser = async(req: Request,res:Response,next:NextFunction) => {
     console.log("reqdata",req.body)
@@ -10,6 +11,14 @@ const createUser = async(req: Request,res:Response,next:NextFunction) => {
         const error = createHttpError(400,"All Feilds are required.")
         return next(error);
     }
+
+    // Database Call
+    const user = await userModel.findOne({email})
+    if(user){
+        const error = createHttpError(400,"Email Already Registered,")
+        return next(error)
+    }
+
     res.json({message:"User Created."})
 
 }
