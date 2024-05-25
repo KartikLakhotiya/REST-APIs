@@ -4,6 +4,7 @@ import { Multer } from "multer";
 import path from "node:path";
 import bookModel from "./bookModel";
 import fs from 'node:fs';
+import { AuthRequest } from "../middleware/authenticate";
 
 const createBook = async(req: Request, res: Response, next:NextFunction) => {
 
@@ -36,10 +37,11 @@ const createBook = async(req: Request, res: Response, next:NextFunction) => {
     console.log('Book upload Result',bookFileUploadResult)
     console.log('file upload result',uploadResult)
 
+    const _req = req as AuthRequest
     const newBook = await bookModel.create({
         title,
         genre,
-        author: '665073c5711e524bdcd31989',
+        author: _req.userID,
         coverImage: uploadResult.secure_url,
         file: bookFileUploadResult.secure_url
     })
