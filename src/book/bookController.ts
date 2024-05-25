@@ -3,7 +3,7 @@ import cloudinary from "../config/cloudinary";
 import { Multer } from "multer";
 import path from "node:path";
 import bookModel from "./bookModel";
-import fs  from 'node:fs';
+import fs from 'node:fs';
 
 const createBook = async(req: Request, res: Response, next:NextFunction) => {
 
@@ -21,6 +21,7 @@ const createBook = async(req: Request, res: Response, next:NextFunction) => {
         folder: 'book-covers',
         format: coverImageMimeType,
     })
+    
 
     const bookFileName = files.file[0].filename;
     const bookFilePath = path.resolve(__dirname,'../../public/data/uploads',bookFileName)
@@ -48,8 +49,11 @@ const createBook = async(req: Request, res: Response, next:NextFunction) => {
     await fs.promises.unlink(filePath)
     await fs.promises.unlink(bookFilePath)
 
+
     
-    res.status(201).json({id:newBook._id})
+    
+    res.status(201).json({id:newBook._id,message:"Book Registered."})
+    console.log('Book Registered.')
 }
 
 export { createBook };

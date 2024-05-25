@@ -56,6 +56,7 @@ const loginUser = async(req: Request,res:Response,next:NextFunction) => {
     //create access token.
     const token = sign({sub: user._id},config.jwtSecret as string,{expiresIn:"7d", algorithm:"HS256"});
     res.json({message:"User Logged in",accessToken: token})
+    console.log('User Logged in.')
 
 }
 
